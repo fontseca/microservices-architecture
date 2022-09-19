@@ -9,7 +9,8 @@ project(
 add_executable(
   ${PROJECT_NAME}
     Includes/Core/BaseController.hpp
-    Includes/Controllers/AuthenticationController.hpp
+    Includes/Controllers/AuthenticationController.hp
+    Includes/Models/UserModel.hppp
 
     Sources/Main.cpp
     Sources/Core/BaseController.cpp
