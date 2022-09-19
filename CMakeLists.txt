@@ -21,8 +21,13 @@ find_package(
     CONFIG REQUIRED
 )
 
+find_package(
+  cpp-jwt
+    CONFIG REQUIRED
+)
+
 add_subdirectory(InvestorService)
 
 # add_subdirectory(ApiGateway)
 
-# add_subdirectory(Authentication)
+add_subdirectory(AuthenticationService)
