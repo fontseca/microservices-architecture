@@ -8,28 +8,14 @@
 #include <cpprest/json.h>
 #include <mongocxx/client.hpp>
 #include <mongocxx/uri.hpp>
+#include <bsoncxx/json.hpp>
 
 namespace Server::Repositories
 {
   struct InvestorRepository final
   {
-    InvestorRepository()
-    {
-      this->m_Connection = mongocxx::client{mongocxx::uri{"mongodb+srv://fontseca:L6wmddLHjhk3SNF9@personal.l3tcooi.mongodb.net/?retryWrites=true&w=majority"}};
-      this->m_Database = this->m_Connection["EcosystemOfServices"];
-    }
-
-    web::json::value FetchAllInvestors() noexcept
-    {
-      web::json::value response = web::json::value::array();
-      for (uint32_t i = 0; const auto &doc : this->m_Database.collection("investor").find({}))
-      {
-        web::json::value o = web::json::value::object();
-        o = web::json::value::parse(bsoncxx::to_json(doc));
-        response[i++] = o;
-      }
-      return response;
-    }
+    InvestorRepository();
+    web::json::value FetchAllInvestors() const noexcept;
 
   private:
     mongocxx::client m_Connection;

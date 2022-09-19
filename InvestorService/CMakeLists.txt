@@ -16,6 +16,7 @@ add_executable(
     Sources/Main.cpp
     Sources/Core/BaseController.cpp
     Sources/Controllers/InvestorController.cpp
+    Sources/Repositories/InvestorRepository.cpp
 )
 
 target_link_libraries(
