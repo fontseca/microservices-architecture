@@ -10,6 +10,7 @@ add_executable(
   ${PROJECT_NAME}
     Includes/Core/BaseController.hpp
     Includes/Controllers/InvestorController.hpp
+    Includes/Models/InvestorModel.hpp
 
     Sources/Main.cpp
     Sources/Core/BaseController.cpp
