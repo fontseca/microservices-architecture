@@ -19,7 +19,8 @@ namespace Server::Repositories
   {
     InvestorRepository();
     web::json::value FetchAllInvestors() const noexcept;
-    bool CreateInvestor(const Server::Models::InvestorModel &investor) const noexcept;
+    bool CreateInvestor(const Server::Models::InvestorModel &) const noexcept;
+    bool ModifyInvestor(const std::string, const Server::Models::InvestorModel &) const noexcept;
 
   private:
     mongocxx::client m_Connection;
