@@ -6,6 +6,7 @@
 
 #include <cpprest/http_listener.h>
 #include <bsoncxx/json.hpp>
+#include <jwt/jwt.hpp>
 
 #include "Includes/Controllers/AuthenticationController.hpp"
 #include "Includes/Models/UserModel.hpp"
@@ -62,6 +63,39 @@ void AuthenticationController::HandlePost(http_request request)
   // Log in.
   if (path[0] == "login")
   {
+
+    const auto login_lambda = [=](pplx::task<web::json::value> task)
+    {
+      try
+      {
+        const web::json::value json_value = task.get();
+        Server::Models::UserModel user{};
+        const Server::Repositories::AuthenticationRepository auth_repository{};
+
+        user.Email = json_value.as_object().at(U("email")).as_string();
+        user.Password = json_value.as_object().at(U("password")).as_string();
+
+        if (auth_repository.LoginUser(user))
+        {
+          using namespace jwt::params;
+          auto response = web::json::value::object();
+          jwt::jwt_object obj{algorithm("HS256"), secret("my secret is..."), payload({{"email", user.Email}})};
+          response[U("Authentication")] = web::json::value::string("Bearer " + obj.signature());
+          request.reply(status_codes::OK, response);
+        }
+        else
+          request.reply(status_codes::InternalError, "Something went wrong. Try using a different URL or ID.");
+      }
+      catch (const std::exception &ex)
+      {
+        std::cerr << ex.what() << std::endl;
+        request.reply(status_codes::BadRequest, ex.what());
+      }
+    };
+
+    request
+        .extract_json()
+        .then(login_lambda);
   }
 
   return;

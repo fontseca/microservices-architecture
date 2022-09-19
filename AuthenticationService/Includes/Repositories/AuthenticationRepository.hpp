@@ -20,7 +20,7 @@ namespace Server::Repositories
     AuthenticationRepository();
 
     bool SignupUser(const Server::Models::UserModel &) const noexcept;
-    bool LoginUser(const Server::Models::UserModel &) const noexcept;
+    bool LoginUser(const Server::Models::UserModel &) const;
 
   private:
     mongocxx::client m_Connection;
