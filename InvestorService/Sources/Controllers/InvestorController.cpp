@@ -96,7 +96,7 @@ void InvestorController::HandlePut(http_request request)
       if (investor_repository.ModifyInvestor(path[0], investor))
         request.reply(status_codes::NoContent, "Investor updated.");
       else
-        request.reply(status_codes::InternalError);
+        request.reply(status_codes::InternalError, "Something went wrong. Try using a different URL or ID.");
     }
     catch (std::exception &ex)
     {
@@ -116,6 +116,7 @@ void InvestorController::HandleDelete(http_request request)
 {
   Server::Core::BaseController::HandleDelete(request);
   const auto path = this->RequestPath(request);
+  InvestorRepository investor_repository{};
 
   if (path.empty() || path.size() > 1)
   {
@@ -123,15 +124,9 @@ void InvestorController::HandleDelete(http_request request)
     return;
   }
 
-  // const int32_t id = (path[0].c_str());
-  // this->DeleteInvestor(request, id);
-  request.reply(status_codes::Created, "Deleted: " + (path[0]));
-
-  return;
-}
-
-void InvestorController::DeleteInvestor(const http_request &request, const int32_t id)
-{
-  request.reply(status_codes::Created, "Deleted: " + std::to_string(id));
+  if (investor_repository.DeleteInvestor(path[0]))
+    request.reply(status_codes::Created, "Deleted: " + (path[0]));
+  else
+    request.reply(status_codes::InternalError, "Something went wrong. Try using a different URL or ID.");
   return;
 }

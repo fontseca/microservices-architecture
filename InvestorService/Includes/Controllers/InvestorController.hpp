@@ -22,8 +22,6 @@ namespace Server::Controllers
     void HandlePut(http_request request) override;
 
   private:
-    void DeleteInvestor(const http_request &request, const int32_t id);
-
     void InitializeHandlers() override
     {
       this->m_Listener.support(methods::GET, std::bind(&Server::Core::BaseController::HandleGet, this, std::placeholders::_1));

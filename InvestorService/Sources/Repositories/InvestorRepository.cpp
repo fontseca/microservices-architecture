@@ -40,27 +40,53 @@ bool InvestorRepository::CreateInvestor(const InvestorModel &investor) const noe
 
 bool InvestorRepository::ModifyInvestor(const std::string id, const InvestorModel &new_investor) const noexcept
 {
-  auto builder = bsoncxx::builder::stream::document{};
-  bsoncxx::oid doc_id(id);
+  try
+  {
 
-  bsoncxx::document::value update_doc =
-      builder << "$set" << bsoncxx::builder::stream::open_document
-              << "name" << new_investor.Name
-              << "phone" << new_investor.Phone
-              << "email" << new_investor.Email
-              << bsoncxx::builder::stream::close_document
-              << bsoncxx::builder::stream::finalize;
+    auto builder = bsoncxx::builder::stream::document{};
+    bsoncxx::oid doc_id(id);
 
-  auto maybe = this->m_Database.collection("investor").update_one(make_document(kvp("_id", doc_id)), update_doc.view());
+    bsoncxx::document::value update_doc =
+        builder << "$set" << bsoncxx::builder::stream::open_document
+                << "name" << new_investor.Name
+                << "phone" << new_investor.Phone
+                << "email" << new_investor.Email
+                << bsoncxx::builder::stream::close_document
+                << bsoncxx::builder::stream::finalize;
 
-  // Find one:
-  // auto maybe_result = this->m_Database.collection("investor").find_one(make_document(kvp("_id", doc_id)));
-  // if (maybe_result)
-  // {
-  //   std::cout << bsoncxx::to_json(maybe_result.value().view());
-  // }
+    auto maybe = this->m_Database.collection("investor").update_one(make_document(kvp("_id", doc_id)), update_doc.view());
 
-  if (maybe)
-    return maybe->modified_count() == 1;
+    // Find one:
+    // auto maybe_result = this->m_Database.collection("investor").find_one(make_document(kvp("_id", doc_id)));
+    // if (maybe_result)
+    // {
+    //   std::cout << bsoncxx::to_json(maybe_result.value().view());
+    // }
+
+    if (maybe)
+      return maybe->modified_count() == 1;
+    return false;
+  }
+  catch (const std::exception &ex)
+  {
+    std::cerr << ex.what() << std::endl;
+  }
+  return false;
+}
+
+bool InvestorRepository::DeleteInvestor(const std::string id) const noexcept
+{
+  try
+  {
+    bsoncxx::oid doc_id(id);
+    auto maybe = this->m_Database.collection("investor").delete_one(make_document(kvp("_id", doc_id)));
+    if (maybe)
+      return maybe->deleted_count() == 1;
+    return false;
+  }
+  catch (const std::exception &ex)
+  {
+    std::cerr << ex.what() << std::endl;
+  }
   return false;
 }
