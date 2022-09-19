@@ -9,12 +9,14 @@ project(
 add_executable(
   ${PROJECT_NAME}
     Includes/Core/BaseController.hpp
-    Includes/Controllers/AuthenticationController.hp
-    Includes/Models/UserModel.hppp
+    Includes/Controllers/AuthenticationController.hpp
+    Includes/Models/UserModel.hpp
+    Includes/Repositories/AuthenticationRepository.hpp
 
     Sources/Main.cpp
     Sources/Core/BaseController.cpp
     Sources/Controllers/AuthenticationController.cpp
+    Sources/Repositories/AuthenticationRepository.cpp
 )
 
 target_link_libraries(

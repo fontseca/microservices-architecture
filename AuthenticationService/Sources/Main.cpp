@@ -7,7 +7,7 @@
 
 int main()
 {
-  const std::string listener_uri{"http://localhost:5001/auth"};
+  const std::string listener_uri{"http://localhost:5001"};
   Server::Controllers::AuthenticationController auth_controller{};
 
   auth_controller.SetControllerAt(listener_uri);
