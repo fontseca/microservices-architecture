@@ -22,7 +22,6 @@ namespace Server::Controllers
     void HandlePut(http_request request) override;
 
   private:
-    void CreateInvestor(const http_request &request);
     void ModifyInvestor(const http_request &request, const int32_t id);
     void DeleteInvestor(const http_request &request, const int32_t id);
 

@@ -9,6 +9,7 @@
 
 #include "Includes/Controllers/InvestorController.hpp"
 #include "Includes/Repositories/InvestorRepository.hpp"
+#include "Includes/Models/InvestorModel.hpp"
 
 using namespace web::http;
 using namespace web::http::experimental::listener;
@@ -38,7 +39,34 @@ void InvestorController::HandlePost(http_request request)
     return;
   }
 
-  this->CreateInvestor(request);
+  const auto then_lambda = [request](pplx::task<web::json::value> task)
+  {
+    try
+    {
+      const web::json::value json_value = task.get();
+      Server::Models::InvestorModel investor;
+      InvestorRepository investor_repository{};
+
+      investor.Name = json_value.as_object().at(U("name")).as_string();
+      investor.Email = json_value.as_object().at(U("email")).as_string();
+      investor.Phone = json_value.as_object().at(U("phone")).as_string();
+
+      if (investor_repository.CreateInvestor(investor))
+        request.reply(status_codes::Created, "Investor created.");
+      else
+        request.reply(status_codes::InternalError);
+    }
+    catch (std::exception &ex)
+    {
+      std::cerr << ex.what() << std::endl;
+      request.reply(status_codes::BadRequest, ex.what());
+    }
+  };
+
+  request
+      .extract_json()
+      .then(then_lambda);
+
   return;
 }
 
@@ -73,30 +101,6 @@ void InvestorController::HandleDelete(http_request request)
   const int32_t id = atoi(path[0].c_str());
   this->DeleteInvestor(request, id);
 
-  return;
-}
-
-// METHODS
-
-void InvestorController::CreateInvestor(const http_request &request)
-{
-  const auto then_lambda = [request](pplx::task<web::json::value> task)
-  {
-    try
-    {
-      auto const json_value = task.get();
-      request.reply(status_codes::Created);
-      return;
-    }
-    catch (std::exception &ex)
-    {
-      std::cerr << ex.what();
-    }
-  };
-
-  request
-      .extract_json()
-      .then(then_lambda);
   return;
 }
 

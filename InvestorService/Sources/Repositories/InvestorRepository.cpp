@@ -3,6 +3,9 @@
 //
 
 #include "Includes/Repositories/InvestorRepository.hpp"
+#include "Includes/Models/InvestorModel.hpp"
+
+using namespace Server::Models;
 
 Server::Repositories::InvestorRepository::InvestorRepository()
 {
@@ -20,4 +23,15 @@ web::json::value Server::Repositories::InvestorRepository::FetchAllInvestors() c
     response[i++] = o;
   }
   return response;
+}
+
+bool Server::Repositories::InvestorRepository::CreateInvestor(const InvestorModel &investor) const noexcept
+{
+  auto builder = bsoncxx::builder::stream::document{};
+  bsoncxx::document::value investor_doc =
+      builder << "name" << investor.Name
+              << "email" << investor.Email
+              << "phone" << investor.Phone << bsoncxx::builder::stream::finalize;
+  this->m_Database.collection("investor").insert_one(investor_doc.view());
+  return true;
 }

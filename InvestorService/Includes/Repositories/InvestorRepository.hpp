@@ -9,6 +9,9 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/uri.hpp>
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/builder/stream/document.hpp>
+
+#include "Includes/Models/InvestorModel.hpp"
 
 namespace Server::Repositories
 {
@@ -16,6 +19,7 @@ namespace Server::Repositories
   {
     InvestorRepository();
     web::json::value FetchAllInvestors() const noexcept;
+    bool CreateInvestor(const Server::Models::InvestorModel &investor) const noexcept;
 
   private:
     mongocxx::client m_Connection;
