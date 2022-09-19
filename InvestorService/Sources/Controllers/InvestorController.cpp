@@ -2,27 +2,27 @@
 //  Created by Jeremy Fonseca on September, 2022
 //
 
+#include <sstream>
+
 #include <cpprest/http_listener.h>
+#include <bsoncxx/json.hpp>
+
 #include "Includes/Controllers/InvestorController.hpp"
+#include "Includes/Repositories/InvestorRepository.hpp"
 
 using namespace web::http;
 using namespace web::http::experimental::listener;
 using namespace Server::Controllers;
+using namespace Server::Repositories;
 
 void InvestorController::HandleGet(http_request request)
 {
   Server::Core::BaseController::HandleGet(request);
+  InvestorRepository investor_repository{};
   const auto path = this->RequestPath(request);
   if (!path.empty())
-  {
     if (path[0] == "all" && path.size() == 1)
-    {
-      auto response = web::json::value::object();
-      response["version"] = web::json::value::string("0.1.1");
-      response["status"] = web::json::value::string("ready!");
-      request.reply(status_codes::OK, response);
-    }
-  }
+      request.reply(status_codes::OK, investor_repository.FetchAllInvestors());
   request.reply(status_codes::NotFound);
   return;
 }

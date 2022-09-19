@@ -11,6 +11,16 @@ find_package(
     CONFIG REQUIRED
 )
 
+find_package(
+  bsoncxx
+    CONFIG REQUIRED
+)
+
+find_package(
+  mongocxx
+    CONFIG REQUIRED
+)
+
 add_subdirectory(InvestorService)
 
 # add_subdirectory(ApiGateway)

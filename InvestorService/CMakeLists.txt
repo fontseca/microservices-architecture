@@ -11,6 +11,7 @@ add_executable(
     Includes/Core/BaseController.hpp
     Includes/Controllers/InvestorController.hpp
     Includes/Models/InvestorModel.hpp
+    Includes/Repositories/InvestorRepository.hpp
 
     Sources/Main.cpp
     Sources/Core/BaseController.cpp
@@ -21,6 +22,8 @@ target_link_libraries(
   ${PROJECT_NAME}
     PRIVATE
       cpprestsdk::cpprest
+      mongo::bsoncxx_static
+      mongo::mongocxx_static
 )
 
 target_include_directories(
