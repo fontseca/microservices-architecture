@@ -75,7 +75,15 @@ void BaseController::HandlePut(web::http::http_request request)
       << std::endl;
 }
 
-void BaseController::HandleDelete(web::http::http_request request) {}
+void BaseController::HandleDelete(web::http::http_request request)
+{
+  std::clog
+      << "DELETE `"
+      << this->ControllerFullRoute()
+      << request.request_uri().to_string()
+      << "`"
+      << std::endl;
+}
 
 void BaseController::InitializeHandlers() {}
 

@@ -31,15 +31,14 @@ void InvestorController::HandlePost(http_request request)
 {
   Server::Core::BaseController::HandlePost(request);
   const auto path = this->RequestPath(request);
-  if (!path.empty())
+
+  if (path.size() > 0)
   {
-    if (path[0] == "create" && path.size() == 1)
-    {
-      this->CreateInvestor(request);
-      return;
-    }
+    request.reply(status_codes::NotFound);
+    return;
   }
-  request.reply(status_codes::NotFound);
+
+  this->CreateInvestor(request);
   return;
 }
 
@@ -47,31 +46,34 @@ void InvestorController::HandlePut(http_request request)
 {
   Server::Core::BaseController::HandlePut(request);
   const auto path = this->RequestPath(request);
-  if (!path.empty())
+
+  if (path.empty() || path.size() > 1)
   {
-    if (path[0] == "modify" && path.size() == 2)
-    {
-      if (!path[1].empty())
-      {
-        try
-        {
-          const int32_t id = atoi(path[1].c_str());
-          this->ModifyInvestor(request, id);
-          return;
-        }
-        catch (const std::exception &e)
-        {
-          std::cerr << e.what() << '\n';
-        }
-        return;
-      }
-    }
+    request.reply(status_codes::NotFound);
+    return;
   }
-  request.reply(status_codes::NotFound);
+
+  const int32_t id = atoi(path[0].c_str());
+  this->ModifyInvestor(request, id);
+
+  return;
 }
 
 void InvestorController::HandleDelete(http_request request)
 {
+  Server::Core::BaseController::HandleDelete(request);
+  const auto path = this->RequestPath(request);
+
+  if (path.empty() || path.size() > 1)
+  {
+    request.reply(status_codes::NotFound);
+    return;
+  }
+
+  const int32_t id = atoi(path[0].c_str());
+  this->DeleteInvestor(request, id);
+
+  return;
 }
 
 // METHODS
@@ -101,5 +103,11 @@ void InvestorController::CreateInvestor(const http_request &request)
 void InvestorController::ModifyInvestor(const http_request &request, const int32_t id)
 {
   request.reply(status_codes::Created, "Modified: " + std::to_string(id));
+  return;
+}
+
+void InvestorController::DeleteInvestor(const http_request &request, const int32_t id)
+{
+  request.reply(status_codes::Created, "Deleted: " + std::to_string(id));
   return;
 }
