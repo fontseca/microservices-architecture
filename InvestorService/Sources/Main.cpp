@@ -1,5 +1,8 @@
-#include <iostream>
+//
+//  Created by Jeremy Fonseca on September, 2022
+//
 
+#include <iostream>
 #include "Includes/Controllers/InvestorController.hpp"
 
 int main()
@@ -10,9 +13,21 @@ int main()
   investor_controller.SetControllerAt(listener_uri);
   investor_controller.OpenController().wait();
 
+  std::clog
+      << "Type q to quit service."
+      << std::endl;
+
   for (;;)
-    ;
+  {
+    int8_t q;
+    std::cin >> q;
+    if (q == 'q')
+      break;
+  }
 
   investor_controller.ShutdownController().wait();
-  return 0;
+  std::clog
+      << "Bye."
+      << std::endl;
+  return EXIT_SUCCESS;
 }

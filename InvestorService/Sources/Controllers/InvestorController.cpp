@@ -35,20 +35,71 @@ void InvestorController::HandlePost(http_request request)
   {
     if (path[0] == "create" && path.size() == 1)
     {
-      this->CreateInvestor();
-      request.reply(status_codes::Created, "Investor created");
+      this->CreateInvestor(request);
+      return;
     }
   }
   request.reply(status_codes::NotFound);
   return;
 }
 
+void InvestorController::HandlePut(http_request request)
+{
+  Server::Core::BaseController::HandlePut(request);
+  const auto path = this->RequestPath(request);
+  if (!path.empty())
+  {
+    if (path[0] == "modify" && path.size() == 2)
+    {
+      if (!path[1].empty())
+      {
+        try
+        {
+          const int32_t id = atoi(path[1].c_str());
+          this->ModifyInvestor(request, id);
+          return;
+        }
+        catch (const std::exception &e)
+        {
+          std::cerr << e.what() << '\n';
+        }
+        return;
+      }
+    }
+  }
+  request.reply(status_codes::NotFound);
+}
+
 void InvestorController::HandleDelete(http_request request)
 {
 }
 
-void InvestorController::CreateInvestor()
+// METHODS
+
+void InvestorController::CreateInvestor(const http_request &request)
 {
-  std::cout << "Creating investor...\n";
+  const auto then_lambda = [request](pplx::task<web::json::value> task)
+  {
+    try
+    {
+      auto const json_value = task.get();
+      request.reply(status_codes::Created);
+      return;
+    }
+    catch (std::exception &ex)
+    {
+      std::cerr << ex.what();
+    }
+  };
+
+  request
+      .extract_json()
+      .then(then_lambda);
+  return;
+}
+
+void InvestorController::ModifyInvestor(const http_request &request, const int32_t id)
+{
+  request.reply(status_codes::Created, "Modified: " + std::to_string(id));
   return;
 }

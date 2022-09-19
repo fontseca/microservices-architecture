@@ -1,3 +1,7 @@
+//
+//  Created by Jeremy Fonseca on September, 2022
+//
+
 #include <cpprest/http_listener.h>
 
 #include "Includes/Core/BaseController.hpp"
@@ -55,6 +59,16 @@ void BaseController::HandlePost(web::http::http_request request)
 {
   std::clog
       << "POST `"
+      << this->ControllerFullRoute()
+      << request.request_uri().to_string()
+      << "`"
+      << std::endl;
+}
+
+void BaseController::HandlePut(web::http::http_request request)
+{
+  std::clog
+      << "PUT `"
       << this->ControllerFullRoute()
       << request.request_uri().to_string()
       << "`"

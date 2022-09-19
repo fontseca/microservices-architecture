@@ -1,3 +1,7 @@
+//
+//  Created by Jeremy Fonseca on September, 2022
+//
+
 #ifndef C95CE902_398A_4378_BF40_B98012CB6E99
 #define C95CE902_398A_4378_BF40_B98012CB6E99
 
@@ -19,6 +23,7 @@ namespace Server::Core
     virtual void HandleGet(web::http::http_request request) = 0;
     virtual void HandlePost(web::http::http_request request) = 0;
     virtual void HandleDelete(web::http::http_request request) = 0;
+    virtual void HandlePut(web::http::http_request request) = 0;
     virtual void InitializeHandlers() = 0;
 
     std::vector<utility::string_t> RequestPath(const web::http::http_request &request);
