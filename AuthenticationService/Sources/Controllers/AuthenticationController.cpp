@@ -80,6 +80,8 @@ void AuthenticationController::HandlePost(http_request request)
           using namespace jwt::params;
           auto response = web::json::value::object();
           jwt::jwt_object obj{algorithm("HS256"), secret("my secret is..."), payload({{"email", user.Email}})};
+          obj.add_claim("iss", "arun.muralidharan")
+              .add_claim("exp", std::chrono::system_clock::now() + std::chrono::seconds{30});
           response[U("Authentication")] = web::json::value::string("Bearer " + obj.signature());
           request.reply(status_codes::OK, response);
         }

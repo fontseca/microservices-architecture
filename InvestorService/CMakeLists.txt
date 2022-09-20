@@ -12,6 +12,7 @@ add_executable(
     Includes/Controllers/InvestorController.hpp
     Includes/Models/InvestorModel.hpp
     Includes/Repositories/InvestorRepository.hpp
+    Includes/Helpers/Authorization.hpp
 
     Sources/Main.cpp
     Sources/Core/BaseController.cpp

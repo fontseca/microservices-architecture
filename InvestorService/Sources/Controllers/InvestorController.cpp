@@ -10,6 +10,7 @@
 #include "Includes/Controllers/InvestorController.hpp"
 #include "Includes/Repositories/InvestorRepository.hpp"
 #include "Includes/Models/InvestorModel.hpp"
+#include "Includes/Helpers/Authorization.hpp"
 
 using namespace web::http;
 using namespace web::http::experimental::listener;
@@ -18,6 +19,9 @@ using namespace Server::Repositories;
 
 void InvestorController::HandleGet(http_request request)
 {
+  if (!Server::Helpers::HasAuthorization(request))
+    return;
+
   Server::Core::BaseController::HandleGet(request);
   InvestorRepository investor_repository{};
   const auto path = this->RequestPath(request);
@@ -30,6 +34,8 @@ void InvestorController::HandleGet(http_request request)
 
 void InvestorController::HandlePost(http_request request)
 {
+  if (!Server::Helpers::HasAuthorization(request))
+    return;
   Server::Core::BaseController::HandlePost(request);
   const auto path = this->RequestPath(request);
 
@@ -72,6 +78,8 @@ void InvestorController::HandlePost(http_request request)
 
 void InvestorController::HandlePut(http_request request)
 {
+  if (!Server::Helpers::HasAuthorization(request))
+    return;
   Server::Core::BaseController::HandlePut(request);
   const auto path = this->RequestPath(request);
 
@@ -114,6 +122,8 @@ void InvestorController::HandlePut(http_request request)
 
 void InvestorController::HandleDelete(http_request request)
 {
+  if (!Server::Helpers::HasAuthorization(request))
+    return;
   Server::Core::BaseController::HandleDelete(request);
   const auto path = this->RequestPath(request);
   InvestorRepository investor_repository{};
