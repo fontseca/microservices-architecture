@@ -20,6 +20,38 @@ using namespace Server::Controllers;
 void ApiGatewayController::HandleGet(http_request request)
 {
   Server::Core::BaseController::HandleGet(request);
+  const auto path = this->RequestPath(request);
+
+  if (path.empty())
+    request.reply(status_codes::NotFound);
+
+  if (path[0] == "investor" && path.size() == 2)
+  {
+    if (path[1] == "all")
+    {
+
+      const auto handle_reponse = [=](pplx::task<http_response> task)
+      {
+        const auto response = task.get();
+        response
+            .extract_json()
+            .then([=](pplx::task<web::json::value> task)
+                  { request.reply(response.status_code(), task.get()); });
+      };
+
+      client::http_client investor_service{U("http://localhost:5000/investor/" + path[1])};
+      // To add headers you must create a new request/response to add them to it.
+      http_request new_request(methods::GET);
+      auto headers = request.headers();
+      new_request.headers().add(U("Authorization"), U(headers[header_names::authorization]));
+      investor_service
+          .request(new_request)
+          .then(handle_reponse);
+      return; // Must return to avoid two replies.
+    }
+  }
+  request.reply(status_codes::NotFound);
+  return;
 }
 
 void ApiGatewayController::HandlePost(http_request request)
