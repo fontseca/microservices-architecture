@@ -5,7 +5,13 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "/usr/local/vcpkg/installed/x64-linux/include",
-                "/usr/local/vcpkg/installed/x64-linux/include"
+                "/usr/local/vcpkg/installed/x64-linux/include",
+                "/usr/local/vcpkg/installed/x64-linux/include",
+                "${workspaceFolder}/ApiGatewayService",
+                "/usr/local/vcpkg/installed/x64-linux/include",
+                "${workspaceFolder}/ApiGatewayService",
+                "/usr/local/vcpkg/installed/x64-linux/include",
+                "${workspaceFolder}/ApiGatewayService"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",

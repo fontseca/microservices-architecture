@@ -28,6 +28,6 @@ find_package(
 
 add_subdirectory(InvestorService)
 
-# add_subdirectory(ApiGateway)
+add_subdirectory(ApiGatewayService)
 
 add_subdirectory(AuthenticationService)
