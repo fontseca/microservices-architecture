@@ -44,22 +44,27 @@ namespace Server::Helpers
     catch (const jwt::TokenExpiredError &e)
     {
       request.reply(status_codes::Unauthorized, "Token expired. Log in again.");
+      return false;
     }
     catch (const jwt::SignatureFormatError &e)
     {
       request.reply(status_codes::InternalError, e.what());
+      return false;
     }
     catch (const jwt::DecodeError &e)
     {
       request.reply(status_codes::InternalError, e.what());
+      return false;
     }
     catch (const jwt::VerificationError &e)
     {
       request.reply(status_codes::InternalError, e.what());
+      return false;
     }
     catch (...)
     {
       std::cerr << "Caught unknown exception\n";
+      return false;
     }
 
     return true;
