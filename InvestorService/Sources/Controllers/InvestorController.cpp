@@ -58,14 +58,14 @@ void InvestorController::HandlePost(http_request request)
       investor.Phone = json_value.as_object().at(U("phone")).as_string();
 
       if (investor_repository.CreateInvestor(investor))
-        request.reply(status_codes::Created, "Investor created.");
+        request.reply(status_codes::Created, web::json::value::string("Investor created."));
       else
         request.reply(status_codes::InternalError);
     }
     catch (std::exception &ex)
     {
       std::cerr << ex.what() << std::endl;
-      request.reply(status_codes::BadRequest, ex.what());
+      request.reply(status_codes::BadRequest, web::json::value::string(ex.what()));
     }
   };
 
@@ -102,14 +102,14 @@ void InvestorController::HandlePut(http_request request)
       investor.Phone = json_value.as_object().at(U("phone")).as_string();
 
       if (investor_repository.ModifyInvestor(path[0], investor))
-        request.reply(status_codes::NoContent, "Investor updated.");
+        request.reply(status_codes::NoContent, web::json::value::string("Investor updated."));
       else
-        request.reply(status_codes::InternalError, "Something went wrong. Try using a different URL or ID.");
+        request.reply(status_codes::InternalError, web::json::value::string("Something went wrong. Try using a different URL or ID."));
     }
     catch (std::exception &ex)
     {
       std::cerr << ex.what() << std::endl;
-      request.reply(status_codes::BadRequest, ex.what());
+      request.reply(status_codes::BadRequest, web::json::value::string(ex.what()));
     }
   };
 
@@ -135,8 +135,8 @@ void InvestorController::HandleDelete(http_request request)
   }
 
   if (investor_repository.DeleteInvestor(path[0]))
-    request.reply(status_codes::Created, "Deleted: " + (path[0]));
+    request.reply(status_codes::Created, web::json::value::string("Deleted: " + (path[0])));
   else
-    request.reply(status_codes::InternalError, "Something went wrong. Try using a different URL or ID.");
+    request.reply(status_codes::InternalError, web::json::value::string("Something went wrong. Try using a different URL or ID."));
   return;
 }

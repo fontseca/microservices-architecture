@@ -44,9 +44,9 @@ void AuthenticationController::HandlePost(http_request request)
         user.Password = json_value.as_object().at(U("password")).as_string();
 
         if (auth_repository.SignupUser(user))
-          request.reply(status_codes::OK, "Singed up");
+          request.reply(status_codes::OK, web::json::value::string("Singed up"));
         else
-          request.reply(status_codes::InternalError, "Something went wrong. Try using a different URL or ID.");
+          request.reply(status_codes::InternalError, web::json::value::string("Something went wrong. Try using a different URL or ID."));
       }
       catch (const std::exception &ex)
       {
@@ -86,12 +86,12 @@ void AuthenticationController::HandlePost(http_request request)
           request.reply(status_codes::OK, response);
         }
         else
-          request.reply(status_codes::InternalError, "Something went wrong. Try using a different URL or ID.");
+          request.reply(status_codes::InternalError, web::json::value::string("Something went wrong. Try using a different URL or ID."));
       }
       catch (const std::exception &ex)
       {
         std::cerr << ex.what() << std::endl;
-        request.reply(status_codes::BadRequest, ex.what());
+        request.reply(status_codes::BadRequest, web::json::value::string(ex.what()));
       }
     };
 

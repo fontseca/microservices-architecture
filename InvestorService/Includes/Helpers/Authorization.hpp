@@ -19,7 +19,7 @@ namespace Server::Helpers
 
     if (!request.headers().has(header_names::authorization))
     {
-      request.reply(status_codes::Unauthorized, "Wait! You must log in to proceed.");
+      request.reply(status_codes::Unauthorized, web::json::value::string("Wait! You must log in to proceed."));
       return false;
     }
 
@@ -43,22 +43,22 @@ namespace Server::Helpers
     }
     catch (const jwt::TokenExpiredError &e)
     {
-      request.reply(status_codes::Unauthorized, "Token expired. Log in again.");
+      request.reply(status_codes::Unauthorized, web::json::value::string("Token expired. Log in again."));
       return false;
     }
     catch (const jwt::SignatureFormatError &e)
     {
-      request.reply(status_codes::InternalError, e.what());
+      request.reply(status_codes::InternalError, web::json::value::string(e.what()));
       return false;
     }
     catch (const jwt::DecodeError &e)
     {
-      request.reply(status_codes::InternalError, e.what());
+      request.reply(status_codes::InternalError, web::json::value::string(e.what()));
       return false;
     }
     catch (const jwt::VerificationError &e)
     {
-      request.reply(status_codes::InternalError, e.what());
+      request.reply(status_codes::InternalError, web::json::value::string(e.what()));
       return false;
     }
     catch (...)
